@@ -1,0 +1,96 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: db
+  labels:
+    app.kubernetes.io/name: db
+    app.kubernetes.io/part-of: mypp
+    app.kubernetes.io/component: database
+spec:
+  serviceName: db-headless
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: db
+  updateStrategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: db
+        app.kuberntes.io/part-of: myapp
+        app.kubernetes.io/component: database
+    spec:
+      terminationGracePeriodSeconds: 60
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 999
+        runAsGroup: 999
+        fsGroup: 999
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: mongo
+          image: mongo
+          imagePullPolicy: IfNotPresent
+          args: ["--auth", "--bind_ip_all", "--wiredTigerCacheSizeGB=0.25"]
+          ports:
+            - name: mongo
+              containerPort: 27017
+          env:
+            - name: HOME
+              value: /tmp
+            - name: MONGO_INITDB_ROOT_USERNAME
+              valueFrom:
+                secretKeyRef: { name: db-credentials, key: MONGO_INITDB_ROOT_USERNAME }
+            - name: MONGO_INITDB_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef: { name: db-credentials, key: MONGO_INITDB_ROOT_PASSWORD }
+            - name: MONGO_INITDB_DATABASE
+              valueFrom:
+                secretKeyRef: { name: db-credentials, key: MONGO_INITDB_DATABASE }
+            - name: MONGO_APP_USERNAME
+              valueFrom:
+                secretKeyRef: { name: db-credentials, key: MONGO_APP_USERNAME }
+            - name: MONGO_APP_PASSWORD
+              valueFrom:
+                secretKeyRef: { name: db-credentials, key: MONGO_APP_PASSWORD }
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
+          resources:
+            requests:
+              cpu: 150m
+              memory: 512Mi
+            limits:
+              cpu: "1"
+              memory: 1Gi
+          volumeMounts:
+            - name: data
+              mountPath: /data/db
+            - name: configdb
+              mountPath: /data/configdb
+            - name: tmp
+              mountPath: /tmp
+            - name: init
+              mountPath: /docker-entrypoint-initdb.d
+              readOnly: true
+      volumes:
+        - name: configdb
+          emptyDir: {}
+        - name: tmp
+          emptyDir: {}
+        - name: init
+          configMap:
+            name: db-init
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: local-path
+        resources:
+          requests:
+            storage: 2Gi

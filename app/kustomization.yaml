@@ -1,0 +1,28 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: myapp
+
+resources:
+  - namespace.yaml
+  - backend/deployment.yaml
+  - backend/service.yaml
+  - backend/hpa.yaml
+  - backend/pdb.yaml
+  - web/deployment.yaml
+  - web/service.yaml
+  - web/pdb.yaml
+  - web/configmap.yaml
+  - database/statefulset.yaml
+  - database/service.yaml
+
+configMapGenerator:
+  - name: backend-config
+    literals:
+      - NODE_ENV=production
+      - PORT=8080
+
+  - name: db-init
+    files:
+      - database/init/create-user.js
+

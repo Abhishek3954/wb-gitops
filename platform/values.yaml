@@ -1,0 +1,10 @@
+versions:
+  lbc: "3.6.1"
+  eso: "2.13.0"
+
+repoURL: ""
+revision: main
+clusterName: ""
+region: ""
+vpcId: ""
+

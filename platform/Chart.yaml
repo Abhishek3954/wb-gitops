@@ -1,0 +1,4 @@
+apiVersion: v2
+name: platform
+description: Child Applications that Argo CD installs on every cluster
+version: 0.1.0

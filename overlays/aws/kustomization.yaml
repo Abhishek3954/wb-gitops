@@ -19,8 +19,8 @@ images:
   newName: 793168138853.dkr.ecr.ap-south-1.amazonaws.com/whiteboard/mongo
   newTag: 8.3.4-noble
 - name: web
-  newName: public.ecr.aws/u1l5v1p0/whiteboard/app
-  newTag: v1
+  newName: 793168138853.dkr.ecr.ap-south-1.amazonaws.com/whiteboard/app
+  newTag: bca387d
 
 patches:
 - patch: |-

@@ -32,3 +32,10 @@ spec:
     syncOptions:
       - CreateNamespace=true
       - ServerSideApply=true
+  ignoreDifferences:
+    - group: ""
+      kind: Secret
+      name: prometheus-stack-grafana
+      jsonPointers:
+        - /data/admin-password
+        - data/admin-user

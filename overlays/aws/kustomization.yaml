@@ -4,29 +4,29 @@ kind: Kustomization
 namespace: myapp
 
 resources:
-  - ../../app/
-  - clustersecretstore.yaml
-  - externalsecret.yaml
-  - ingress.yaml
-  - web-networkpolicy.yaml
-  - storageclass.yaml
+- ../../app/
+- clustersecretstore.yaml
+- externalsecret.yaml
+- ingress.yaml
+- web-networkpolicy.yaml
+- storageclass.yaml
 
 images:
-  - name: web
-    newName: public.ecr.aws/u1l5v1p0/whiteboard/app
-    newTag: v1
-  - name: backend
-    newName: 793168138853.dkr.ecr.ap-south-1.amazonaws.com/whiteboard/server
-    newTag: v1
-  - name: mongo
-    newName: 793168138853.dkr.ecr.ap-south-1.amazonaws.com/whiteboard/mongo
-    newTag: 8.3.4-noble
+- name: backend
+  newName: 793168138853.dkr.ecr.ap-south-1.amazonaws.com/whiteboard/server
+  newTag: a458242
+- name: mongo
+  newName: 793168138853.dkr.ecr.ap-south-1.amazonaws.com/whiteboard/mongo
+  newTag: 8.3.4-noble
+- name: web
+  newName: 793168138853.dkr.ecr.ap-south-1.amazonaws.com/whiteboard/app
+  newTag: a458242
 
 patches:
-  - target:
-      kind: StatefulSet
-      name: db
-    patch: |-
-      - op: replace
-        path: /spec/volumeClaimTemplates/0/spec/storageClassName
-        value: gp3
+- patch: |-
+    - op: replace
+      path: /spec/volumeClaimTemplates/0/spec/storageClassName
+      value: gp3
+  target:
+    kind: StatefulSet
+    name: db

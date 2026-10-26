@@ -10,7 +10,7 @@ data:
     pid /tmp/nginx.pid;
 
     events {
-    worker_connections 1024;
+        worker_connections 1024;
     }
 
     http {
@@ -20,40 +20,40 @@ data:
         limit_req_zone $binary_remote_addr zone=http_req_limit:10m rate=10r/s;
         limit_conn_zone $binary_remote_addr zone=ws_conn_limit:10m;
 
-    server {
-        listen 8080;
+        server {
+            listen 80;
+    
+            location / {
+                limit_req zone=http_req_limit burst=20 nodelay;
 
-        location / {
-            limit_req zone=http_req_limit burst=20 nodelay;
+                root /usr/share/nginx/html;
+                index index.html index.htm;
+                try_files $uri $uri/ /index.html;
+            }
 
-            root /usr/share/nginx/html;
-            index index.html index.htm;
-            try_files $uri $uri/ /index.html;
-        }
+            location /api1/ {
+                limit_req zone=http_req_limit burst=20 nodelay;
 
-        location /api1/ {
-            limit_conn ws_conn_limit 10;
+                proxy_pass http://api-node:8080/;
+                proxy_http_version 1.1;
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                proxy_set_header X-Forwarded-Proto $scheme;
+            }
 
-            proxy_pass http://api-node:8080/;
-            proxy_http_version 1.1;
-            proxy_set_header Upgrade $http_upgrade;
-            proxy_set_header Connection "upgrade";
-            proxy_set_header Host $host;
-            proxy_cache_bypass $http_upgrade;
+            location /api2/ {
+                limit_conn ws_conn_limit 10;
 
-            proxy_read_timeout 86400s;
-            proxy_send_timeout 86400s;
-        }
+                proxy_pass http://api-node:8080/;
+                proxy_http_version 1.1;
+                proxy_set_header Upgrade $http_upgrade;
+                proxy_set_header Connection "upgrade";
+                proxy_set_header Host $host;
+                proxy_cache_bypass $http_upgrade;
 
-        location /api2/ {
-            limit_req zone=http_req_limit burst=20 nodelay;
-
-            proxy_pass http://api-node:8080/;
-            proxy_http_version 1.1;
-            proxy_set_header Upgrade $http_upgrade;
-            proxy_set_header Connection "upgrade";
-            proxy_set_header Host $host;
-            proxy_cache_bypass $http_upgrade;
+                proxy_read_timeout 86400s;
+                proxy_send_timeout 86400s;
             }
         }
     }

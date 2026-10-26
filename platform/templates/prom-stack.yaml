@@ -15,6 +15,7 @@ spec:
           enabled: true
         prometheus:
           prometheusSpec:
+            scrapeInterval: 30s
             storageSpec:
               volumeClaimTemplate:
                 spec:

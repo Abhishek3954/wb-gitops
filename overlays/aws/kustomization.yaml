@@ -20,7 +20,7 @@ images:
   newTag: 8.3.4-noble
 - name: web
   newName: 793168138853.dkr.ecr.ap-south-1.amazonaws.com/whiteboard/app
-  newTag: a458242
+  newTag: 2e3320d
 
 patches:
 - patch: |-

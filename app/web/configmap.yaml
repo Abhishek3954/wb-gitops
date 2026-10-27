@@ -22,7 +22,7 @@ data:
 
         server {
             listen 80;
-    
+
             location / {
                 limit_req zone=http_req_limit burst=20 nodelay;
 
@@ -54,6 +54,10 @@ data:
 
                 proxy_read_timeout 86400s;
                 proxy_send_timeout 86400s;
+            }
+            location /healthz {
+                return 200 'OK';
+                add_type text/plain;
             }
         }
     }

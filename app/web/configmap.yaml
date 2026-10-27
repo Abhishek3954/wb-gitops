@@ -55,9 +55,10 @@ data:
                 proxy_read_timeout 86400s;
                 proxy_send_timeout 86400s;
             }
+
             location /healthz {
+                default_type text/plain;
                 return 200 'OK';
-                add_type text/plain;
             }
         }
     }

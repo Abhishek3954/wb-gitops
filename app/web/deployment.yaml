@@ -17,12 +17,6 @@ spec:
   selector:
     matchLabels:
       app.kubernetes.io/name: web
-  readinessProbe:
-    httpGet:
-      path: /
-      port: 80
-    initialDelaySeconds: 5
-    periodSeconds: 5
   template:
     metadata:
       labels:

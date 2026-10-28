@@ -9,6 +9,9 @@ metadata:
 spec:
   serviceName: db-headless
   replicas: 1
+  persistentVolumeClaimRetentionPolicy:
+    whenDeleted: Delete
+    whenScaled: Retain
   selector:
     matchLabels:
       app.kubernetes.io/name: db
@@ -21,9 +24,6 @@ spec:
         app.kuberntes.io/part-of: myapp
         app.kubernetes.io/component: database
     spec:
-      persistentVolumeClaimRetentionPolicy:
-        whenDeleted: Delete
-        whenScaled: Retain
       terminationGracePeriodSeconds: 60
       securityContext:
         runAsNonRoot: true

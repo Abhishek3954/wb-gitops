@@ -21,6 +21,9 @@ spec:
         app.kuberntes.io/part-of: myapp
         app.kubernetes.io/component: database
     spec:
+      persistentVolumeClaimRetentionPolicy:
+        whenDeleted: Delete
+        whenScaled: Retain
       terminationGracePeriodSeconds: 60
       securityContext:
         runAsNonRoot: true

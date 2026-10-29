@@ -14,7 +14,7 @@ resources:
 images:
 - name: backend
   newName: 793168138853.dkr.ecr.ap-south-1.amazonaws.com/whiteboard/server
-  newTag: 7f487ac
+  newTag: 709d608
 - name: mongo
   newName: 793168138853.dkr.ecr.ap-south-1.amazonaws.com/whiteboard/mongo
   newTag: 8.3.4-noble

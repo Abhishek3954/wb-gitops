@@ -1,3 +1,7 @@
+[wb-code](https://github.com/Abhishek3954/Whiteboard) — application and CI/CD  
+[wb-infra](https://github.com/Abhishek3954/wb-infra) — AWS infrastructure as code  
+**wb-manifests**
+
 # Kubernetes platform manifests
 
 This repository contains the Kubernetes workloads and platform configuration for Whiteboard. Argo CD, bootstrapped by `wb-infra`, watches this repository and reconciles the platform through a Helm App-of-Apps chart.
